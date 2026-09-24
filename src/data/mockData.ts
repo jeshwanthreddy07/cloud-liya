@@ -43,7 +43,7 @@ export const INITIAL_STUDENT: StudentProfile = {
   currentSemester: 5,
   currentYear: 3,
   academicBatch: "2024 - 2028",
-  cgpa: 8.12,
+  cgpa: 8.4,
   gpa: 8.0,
   attendance: 59.5,
   activities: [

@@ -96,7 +96,7 @@ export const ScholarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.rollNumber === '24RA1A05U6' && parsed.cgpa === 8.12 && parsed.attendance === 59.5) {
+        if (parsed && parsed.rollNumber === '24RA1A05U6' && parsed.cgpa === 8.4 && parsed.attendance === 59.5) {
           return parsed;
         }
       } catch (e) {
