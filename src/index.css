@@ -3,71 +3,45 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-[#F3F4F6] text-[#1F2937] font-sans antialiased;
+  html {
+    scroll-behavior: smooth;
   }
+  body {
+    @apply bg-farm-tan text-stone-900 font-sans antialiased text-base selection:bg-farm-accent selection:text-farm-dark;
+  }
+}
+
+/* Accessible focus outline for farm outdoor visibility */
+:focus-visible {
+  outline: 3px solid #235A3F;
+  outline-offset: 2px;
 }
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F7F4EB;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #52B788;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #2D6A4F;
 }
 
-/* Print specific styles for Hall Ticket and Marks Sheet */
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .print-only {
-    display: block !important;
-  }
-
-  .print-container {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  @page {
-    margin: 1cm;
-    size: auto;
-  }
+/* Smooth pulse animation */
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-pulse-gentle {
+  animation: gentlePulse 3s ease-in-out infinite;
 }

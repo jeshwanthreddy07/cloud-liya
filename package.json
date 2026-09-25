@@ -1,8 +1,25 @@
 {
-  "name": "cloudliya-scholar",
-  "private": true,
+  "name": "agrinexa",
   "version": "1.0.0",
+  "description": "100% Free & Open Source Farm Financial Management & Voice AI App for Indian Farmers",
+  "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/your-org/agrinexa#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/agrinexa.git"
+  },
+  "keywords": [
+    "agtech",
+    "farm-finance",
+    "voice-ai",
+    "multilingual",
+    "india",
+    "open-source",
+    "react",
+    "typescript",
+    "tailwind"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

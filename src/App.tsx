@@ -1,157 +1,112 @@
 import React, { useState } from 'react';
-import { useScholar } from './context/ScholarContext';
-import { Header } from './components/common/Header';
-import { Sidebar } from './components/common/Sidebar';
-import { Toast } from './components/common/Toast';
-import { LoginPage } from './components/auth/LoginPage';
+import { LanguageProvider } from './context/LanguageContext';
+import { Navbar } from './components/Navbar';
+import { HeroSection } from './components/HeroSection';
+import { ValueCardsSection } from './components/ValueCardsSection';
+import { HowItWorksSection } from './components/HowItWorksSection';
+import { FeaturesSection } from './components/FeaturesSection';
+import { TrustStripSection } from './components/TrustStripSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
+import { Footer } from './components/Footer';
+import { InteractiveDemoModal } from './components/InteractiveDemoModal';
+import { FarmAppDashboard } from './components/FarmAppDashboard';
+import { LoginPage, FarmerProfile } from './components/LoginPage';
 
-// Pages
-import { DashboardPage } from './components/pages/DashboardPage';
-import { MarksPage } from './components/pages/MarksPage';
-import { LeavePage } from './components/pages/LeavePage';
-import { EnrollmentPage } from './components/pages/EnrollmentPage';
-import { StudentInfoPage } from './components/pages/StudentInfoPage';
-import { ExamSchedulePage } from './components/pages/ExamSchedulePage';
-import { FeePage } from './components/pages/FeePage';
-import { CurriculumPage } from './components/pages/CurriculumPage';
-import { SettingsPage } from './components/pages/SettingsPage';
+function MainContent() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'landing' | 'login' | 'app'>('landing');
 
-// Mobile bottom bar icons
-import { LayoutDashboard, Award, CalendarDays, BookOpenCheck, UserCircle2 } from 'lucide-react';
+  // Active Farmer Profile State
+  const [farmerProfile, setFarmerProfile] = useState<FarmerProfile>({
+    name: 'Ramesh Reddy',
+    mobile: '9876543210',
+    village: 'Warangal, Telangana',
+    farmType: 'Paddy & Cotton',
+    photoUrl: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=150&auto=format&fit=crop&q=80',
+  });
 
-export const AppContent: React.FC = () => {
-  const { isAuthenticated, activePage, setActivePage } = useScholar();
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handleLaunchWebApp = () => setViewMode('app');
+  const handleGoToLogin = () => {
+    setIsModalOpen(false);
+    setViewMode('login');
+  };
 
-  if (!isAuthenticated) {
+  const handleLoginSuccess = (profile: FarmerProfile) => {
+    setFarmerProfile(profile);
+    setViewMode('app');
+  };
+
+  const handleLogout = () => {
+    setViewMode('login');
+  };
+
+  const handleBackToLanding = () => {
+    setViewMode('landing');
+  };
+
+  if (viewMode === 'login') {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} onBackToLanding={handleBackToLanding} />;
+  }
+
+  if (viewMode === 'app') {
     return (
-      <>
-        <LoginPage />
-        <Toast />
-      </>
+      <FarmAppDashboard
+        profile={farmerProfile}
+        onLogout={handleLogout}
+        onBackToLanding={handleBackToLanding}
+      />
     );
   }
 
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'dashboard':
-        return <DashboardPage />;
-      case 'marks':
-        return <MarksPage />;
-      case 'leaves':
-        return <LeavePage />;
-      case 'enrollment':
-        return <EnrollmentPage />;
-      case 'info':
-        return <StudentInfoPage />;
-      case 'exams':
-      case 'hall-tickets':
-        return <ExamSchedulePage />;
-      case 'fees':
-        return <FeePage />;
-      case 'curriculum':
-        return <CurriculumPage />;
-      case 'settings':
-        return <SettingsPage />;
-      default:
-        return <DashboardPage />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#F3F4F6] dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 flex flex-col antialiased transition-colors duration-200">
+    <div className="min-h-screen bg-farm-tan text-stone-900 font-sans antialiased selection:bg-farm-light selection:text-farm-dark">
       
-      <div className="flex flex-1">
-        {/* Sidebar (Desktop Persistent & Mobile Drawer) */}
-        <Sidebar 
-          isMobileOpen={isMobileSidebarOpen}
-          onCloseMobile={() => setIsMobileSidebarOpen(false)}
-        />
+      {/* Navigation */}
+      <Navbar onOpenModal={handleOpenModal} />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          
-          {/* Top Header */}
-          <Header 
-            onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} 
-          />
+      {/* Main Content */}
+      <main>
+        {/* 1. Hero Section */}
+        <HeroSection onOpenModal={handleOpenModal} />
 
-          {/* Dynamic Page Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-24 lg:pb-8">
-            {renderActivePage()}
-          </main>
+        {/* 2. What This Does For You Section */}
+        <ValueCardsSection />
 
-        </div>
-      </div>
+        {/* 3. How It Works Section */}
+        <HowItWorksSection />
 
-      {/* Mobile Bottom Navigation Bar (replicates Scholar Mobile App feel) */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-800 px-3 py-2 flex items-center justify-around no-print shadow-lg">
-        <button
-          onClick={() => setActivePage('dashboard')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            activePage === 'dashboard' 
-              ? 'text-primary-600 dark:text-primary-400 font-bold' 
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900'
-          }`}
-        >
-          <LayoutDashboard className="w-5 h-5 mb-0.5" />
-          <span>Home</span>
-        </button>
+        {/* 4. Features Section */}
+        <FeaturesSection onOpenModal={handleOpenModal} />
 
-        <button
-          onClick={() => setActivePage('marks')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            activePage === 'marks' 
-              ? 'text-primary-600 dark:text-primary-400 font-bold' 
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900'
-          }`}
-        >
-          <Award className="w-5 h-5 mb-0.5" />
-          <span>Marks</span>
-        </button>
+        {/* 5. Trust & Security Strip */}
+        <TrustStripSection />
 
-        <button
-          onClick={() => setActivePage('leaves')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            activePage === 'leaves' 
-              ? 'text-primary-600 dark:text-primary-400 font-bold' 
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900'
-          }`}
-        >
-          <CalendarDays className="w-5 h-5 mb-0.5" />
-          <span>Leaves</span>
-        </button>
+        {/* 6. Farmer Testimonials */}
+        <TestimonialsSection />
+      </main>
 
-        <button
-          onClick={() => setActivePage('enrollment')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            activePage === 'enrollment' 
-              ? 'text-primary-600 dark:text-primary-400 font-bold' 
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900'
-          }`}
-        >
-          <BookOpenCheck className="w-5 h-5 mb-0.5" />
-          <span>Courses</span>
-        </button>
+      {/* 7. Footer & Final CTA */}
+      <Footer onOpenModal={handleOpenModal} />
 
-        <button
-          onClick={() => setActivePage('info')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            activePage === 'info' 
-              ? 'text-primary-600 dark:text-primary-400 font-bold' 
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900'
-          }`}
-        >
-          <UserCircle2 className="w-5 h-5 mb-0.5" />
-          <span>Profile</span>
-        </button>
-      </nav>
-
-      {/* Floating Toast Notification */}
-      <Toast />
+      {/* Interactive Signup / App Launcher Modal */}
+      <InteractiveDemoModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        onLaunchWebApp={handleGoToLogin}
+      />
 
     </div>
   );
-};
+}
 
-export default AppContent;
+export function App() {
+  return (
+    <LanguageProvider>
+      <MainContent />
+    </LanguageProvider>
+  );
+}
+
+export default App;
